@@ -271,10 +271,10 @@
                         id: doc.id,
                         name: name,
                         email: email,
-                        className: data.className || 'غير موزاد',
+                        className: data.className || 'غير موزع',
                         phone: data.phone || '966566688614',
                         actions: data.actions || [],
-                        attendanceStats: data.attendanceStats || { absents: 0, lates: 0, excuses: 0 }
+                        attendanceStats: data.attendanceStats || { presents: 0, absents: 0, lates: 0 }
                     });
                     
                     if(approvedTbody) {
@@ -953,16 +953,16 @@
                 const timeFormatted = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                 const formattedTime = `${dayName} | ${dateFormatted} - ${timeFormatted}`;
 
-                let attendanceStats = student.attendanceStats || { absents: 0, lates: 0, excuses: 0 };
+                let attendanceStats = student.attendanceStats || { presents: 0, absents: 0, lates: 0 };
                 let actionsList = student.actions || [];
                 
                 if(attendanceType) {
-                    if (attendanceType.includes('غائب')) {
+                    if (attendanceType === 'حاضر') {
+                        attendanceStats.presents++;
+                    } else if (attendanceType === 'غائب') {
                         attendanceStats.absents++;
                     } else if (attendanceType === 'متأخر') {
                         attendanceStats.lates++;
-                    } else if (attendanceType === 'مستأذن') {
-                        attendanceStats.excuses++;
                     }
                 }
                 
@@ -993,10 +993,10 @@
             if(!currentStudentId) return;
             const student = allStudents.find(s => s.id === currentStudentId);
             if(student) {
-                let att = student.attendanceStats || { absents: 0, lates: 0, excuses: 0 };
+                let att = student.attendanceStats || { presents: 0, absents: 0, lates: 0 };
+                if(type === 'presents') att.presents = Math.max(0, (att.presents || 0) + delta);
                 if(type === 'absents') att.absents = Math.max(0, (att.absents || 0) + delta);
                 if(type === 'lates') att.lates = Math.max(0, (att.lates || 0) + delta);
-                if(type === 'excuses') att.excuses = Math.max(0, (att.excuses || 0) + delta);
 
                 openModal(currentStudentId);
                 await db.collection("allowed_students").doc(currentStudentId).update({ attendanceStats: att });
@@ -1020,7 +1020,7 @@
         };
 
         function calculateStudentSummaryData(student) {
-            const att = student.attendanceStats || { absents: 0, lates: 0, excuses: 0 };
+            const att = student.attendanceStats || { presents: 0, absents: 0, lates: 0 };
             const actions = student.actions || [];
             const todayStr = new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
@@ -1047,7 +1047,7 @@
                     if (isToday) positiveCountToday++;
                 }
 
-                if (title.includes('غائب') || title.includes('متأخر') || title.includes('مستأذن') || title.includes('حاضر') || title.includes('هارب')) {
+                if (title.includes('غائب') || title.includes('متأخر') || title.includes('حاضر') || title.includes('هارب') || title.includes('عن بعد') || title.includes('غائب بعذر')) {
                     attendanceEventsList.push(act);
                 }
 
@@ -1094,29 +1094,29 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <h4 class="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
-                            <span>📌 الحضور والغياب</span>
+                            <span>📌 الحضور والغياب والتأخر</span>
                             <span class="text-xs text-slate-500">(تعديل سري)</span>
                         </h4>
                         <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
+                                <span class="block text-xs font-bold text-emerald-700">حضور (${att.presents || 0})</span>
+                                <div class="flex justify-center gap-1 mt-1.5">
+                                    <button onclick="adjustAttendance('presents', 1)" class="bg-emerald-600 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-emerald-700">+</button>
+                                    <button onclick="adjustAttendance('presents', -1)" class="bg-emerald-800 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-emerald-900">-</button>
+                                </div>
+                            </div>
                             <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
-                                <span class="block text-xs font-bold text-rose-700">غائب (${att.absents || 0})</span>
+                                <span class="block text-xs font-bold text-rose-700">غياب (${att.absents || 0})</span>
                                 <div class="flex justify-center gap-1 mt-1.5">
                                     <button onclick="adjustAttendance('absents', 1)" class="bg-rose-600 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-rose-700">+</button>
                                     <button onclick="adjustAttendance('absents', -1)" class="bg-rose-800 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-rose-900">-</button>
                                 </div>
                             </div>
                             <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-100">
-                                <span class="block text-xs font-bold text-amber-700">متأخر (${att.lates || 0})</span>
+                                <span class="block text-xs font-bold text-amber-700">تاخر (${att.lates || 0})</span>
                                 <div class="flex justify-center gap-1 mt-1.5">
                                     <button onclick="adjustAttendance('lates', 1)" class="bg-amber-600 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-amber-700">+</button>
                                     <button onclick="adjustAttendance('lates', -1)" class="bg-amber-800 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-amber-900">-</button>
-                                </div>
-                            </div>
-                            <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-100">
-                                <span class="block text-xs font-bold text-sky-700">مستأذن (${att.excuses || 0})</span>
-                                <div class="flex justify-center gap-1 mt-1.5">
-                                    <button onclick="adjustAttendance('excuses', 1)" class="bg-sky-600 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-sky-700">+</button>
-                                    <button onclick="adjustAttendance('excuses', -1)" class="bg-sky-800 text-white w-7 h-7 rounded-lg font-black text-sm hover:bg-sky-900">-</button>
                                 </div>
                             </div>
                         </div>
@@ -1192,11 +1192,11 @@
 
                     <div class="space-y-4 text-xs font-bold text-slate-800">
                         <div class="bg-white p-3.5 rounded-2xl border border-amber-100 shadow-2xs">
-                            <span class="text-slate-900 font-black text-sm block mb-1">📌 سجل الحضور والغياب:</span>
+                            <span class="text-slate-900 font-black text-sm block mb-1">📌 سجل الحضور والغياب والتأخر:</span>
                             <div class="flex gap-4 text-slate-700 mt-1">
-                                <span>🔴 الغياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
-                                <span>⏰ التأخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
-                                <span>🔵 الاستئذان: <strong class="text-sky-600">${att.excuses || 0}</strong></span>
+                                <span>🟢 حضور: <strong class="text-emerald-600">${att.presents || 0}</strong></span>
+                                <span>🔴 غياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
+                                <span>⏰ تاخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
                             </div>
                         </div>
 
@@ -1274,11 +1274,11 @@
                         <div class="space-y-4 text-xs font-bold text-slate-800">
                             
                             <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 shadow-xs">
-                                <span class="text-amber-950 font-black text-sm block mb-1">📌 سجل الحضور والغياب التفصيلي:</span>
+                                <span class="text-amber-950 font-black text-sm block mb-1">📌 سجل الحضور والغياب والتأخر:</span>
                                 <div class="flex justify-between text-slate-700 my-2 px-2 border-b border-amber-200 pb-2">
-                                    <span>🔴 الغياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
-                                    <span>⏰ التأخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
-                                    <span>🔵 الاستئذان: <strong class="text-sky-600">${att.excuses || 0}</strong></span>
+                                    <span>🟢 حضور: <strong class="text-emerald-600">${att.presents || 0}</strong></span>
+                                    <span>🔴 غياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
+                                    <span>⏰ تاخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
                                 </div>
                                 ${summary.attendanceEventsList.length === 0 ? 
                                     '<p class="text-emerald-700 font-semibold mt-1">منتظم بالحضور والدوام ✨</p>' : 
@@ -1402,11 +1402,11 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-bold text-slate-800">
                             <div class="bg-white p-3.5 rounded-2xl border border-amber-100 shadow-2xs">
-                                <span class="text-slate-900 font-black text-sm block mb-1">📌 سجل الحضور والغياب:</span>
+                                <span class="text-slate-900 font-black text-sm block mb-1">📌 سجل الحضور والغياب والتأخر:</span>
                                 <div class="flex gap-4 text-slate-700 my-1 pb-2 border-b border-slate-100">
-                                    <span>🔴 الغياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
-                                    <span>⏰ التأخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
-                                    <span>🔵 الاستئذان: <strong class="text-sky-600">${att.excuses || 0}</strong></span>
+                                    <span>🟢 حضور: <strong class="text-emerald-600">${att.presents || 0}</strong></span>
+                                    <span>🔴 غياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
+                                    <span>⏰ تاخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
                                 </div>
                                 ${attendanceHtml}
                             </div>
@@ -1485,11 +1485,11 @@
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: #1e293b;">
                             <div style="background: white; padding: 14px; border-radius: 14px; border: 1px solid #fef3c7;">
-                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">📌 سجل الحضور والغياب:</strong>
+                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">📌 سجل الحضور والغياب والتأخر:</strong>
                                 <div style="display: flex; gap: 15px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #f8fafc;">
-                                    <span>🔴 الغياب: <strong style="color: #dc2626;">${att.absents || 0}</strong></span>
-                                    <span>⏰ التأخر: <strong style="color: #d97706;">${att.lates || 0}</strong></span>
-                                    <span>🔵 الاستئذان: <strong style="color: #0284c7;">${att.excuses || 0}</strong></span>
+                                    <span>🟢 حضور: <strong style="color: #059669;">${att.presents || 0}</strong></span>
+                                    <span>🔴 غياب: <strong style="color: #dc2626;">${att.absents || 0}</strong></span>
+                                    <span>⏰ تاخر: <strong style="color: #d97706;">${att.lates || 0}</strong></span>
                                 </div>
                                 ${attendanceHtml}
                             </div>
@@ -1551,13 +1551,13 @@
 
         function openTableClassReportPreview(className) {
             const students = allStudents.filter(s => s.className === className);
-            let totalAbsentsClass = 0, totalLatesClass = 0, totalExcusesClass = 0;
+            let totalPresentsClass = 0, totalAbsentsClass = 0, totalLatesClass = 0;
 
             let studentsRowsHtml = students.map((st, idx) => {
                 const sum = calculateStudentSummaryData(st);
+                totalPresentsClass += sum.att.presents || 0;
                 totalAbsentsClass += sum.att.absents || 0;
                 totalLatesClass += sum.att.lates || 0;
-                totalExcusesClass += sum.att.excuses || 0;
 
                 let homeworkText = sum.homeworkList.length > 0 ? sum.homeworkList.map(h => h.title).join('، ') : 'منتظم';
                 let portfolioText = sum.portfolioList.length > 0 ? sum.portfolioList.map(p => p.title).join('، ') : 'مكتمل';
@@ -1567,9 +1567,9 @@
                     <tr class="border-b">
                         <td class="p-2 font-bold">${idx + 1}</td>
                         <td class="p-2 font-bold text-slate-900">${st.name}</td>
+                        <td class="p-2 text-center text-emerald-600 font-bold">${sum.att.presents || 0}</td>
                         <td class="p-2 text-center text-rose-600 font-bold">${sum.att.absents || 0}</td>
                         <td class="p-2 text-center text-amber-600 font-bold">${sum.att.lates || 0}</td>
-                        <td class="p-2 text-center text-sky-600 font-bold">${sum.att.excuses || 0}</td>
                         <td class="p-2 text-center font-black ${sum.totalScore >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${sum.totalScore > 0 ? '+' + sum.totalScore : sum.totalScore}</td>
                         <td class="p-2 text-xs text-emerald-700 font-semibold">+${sum.totalPositiveScore} (${sum.positiveCountTotal} مشاركة)</td>
                         <td class="p-2 text-xs text-rose-700 font-semibold">${negativeText}</td>
@@ -1588,6 +1588,10 @@
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 text-center mb-4 text-xs font-bold">
+                        <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
+                            <span class="text-emerald-800 block">إجمالي الحضور</span>
+                            <span class="text-lg font-black text-emerald-600">${totalPresentsClass}</span>
+                        </div>
                         <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-200">
                             <span class="text-rose-800 block">إجمالي الغياب</span>
                             <span class="text-lg font-black text-rose-600">${totalAbsentsClass}</span>
@@ -1595,10 +1599,6 @@
                         <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200">
                             <span class="text-amber-800 block">إجمالي التأخر</span>
                             <span class="text-lg font-black text-amber-600">${totalLatesClass}</span>
-                        </div>
-                        <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200">
-                            <span class="text-sky-800 block">إجمالي الاستئذان</span>
-                            <span class="text-lg font-black text-sky-600">${totalExcusesClass}</span>
                         </div>
                     </div>
 
@@ -1608,9 +1608,9 @@
                                 <tr>
                                     <th class="p-2.5">#</th>
                                     <th class="p-2.5">اسم الطالب</th>
+                                    <th class="p-2.5 text-center">حضور</th>
                                     <th class="p-2.5 text-center">غياب</th>
-                                    <th class="p-2.5 text-center">تأخر</th>
-                                    <th class="p-2.5 text-center">استئذان</th>
+                                    <th class="p-2.5 text-center">تاخر</th>
                                     <th class="p-2.5 text-center">النقاط</th>
                                     <th class="p-2.5">المشاركات الإيجابية</th>
                                     <th class="p-2.5">الملاحظات السلبية</th>
@@ -1634,13 +1634,13 @@
 
         function shareTableClassReportLink(className) {
             const students = allStudents.filter(s => s.className === className);
-            let totalAbsentsClass = 0, totalLatesClass = 0, totalExcusesClass = 0;
+            let totalPresentsClass = 0, totalAbsentsClass = 0, totalLatesClass = 0;
 
             let studentsRowsHtml = students.map((st, idx) => {
                 const sum = calculateStudentSummaryData(st);
+                totalPresentsClass += sum.att.presents || 0;
                 totalAbsentsClass += sum.att.absents || 0;
                 totalLatesClass += sum.att.lates || 0;
-                totalExcusesClass += sum.att.excuses || 0;
 
                 let homeworkText = sum.homeworkList.length > 0 ? sum.homeworkList.map(h => h.title).join('، ') : 'منتظم';
                 let portfolioText = sum.portfolioList.length > 0 ? sum.portfolioList.map(p => p.title).join('، ') : 'مكتمل';
@@ -1650,9 +1650,9 @@
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 10px; font-weight: bold;">${idx + 1}</td>
                         <td style="padding: 10px; font-weight: bold; color: #1e293b;">${st.name}</td>
+                        <td style="padding: 10px; text-align: center; color: #059669; font-weight: bold;">${sum.att.presents || 0}</td>
                         <td style="padding: 10px; text-align: center; color: #dc2626; font-weight: bold;">${sum.att.absents || 0}</td>
                         <td style="padding: 10px; text-align: center; color: #d97706; font-weight: bold;">${sum.att.lates || 0}</td>
-                        <td style="padding: 10px; text-align: center; color: #0284c7; font-weight: bold;">${sum.att.excuses || 0}</td>
                         <td style="padding: 10px; text-align: center; font-weight: 900; color: ${sum.totalScore >= 0 ? '#059669' : '#dc2626'};">${sum.totalScore > 0 ? '+' + sum.totalScore : sum.totalScore}</td>
                         <td style="padding: 10px; font-size: 11px; color: #047857; font-weight: bold;">+${sum.totalPositiveScore} (${sum.positiveCountTotal} مشاركة)</td>
                         <td style="padding: 10px; font-size: 11px; color: #b91c1c; font-weight: bold;">${negativeText}</td>
@@ -1684,15 +1684,15 @@
                             <p class="text-xs text-slate-500 mt-1 font-semibold">الدكتور سامي محمد العمر 👨‍🏫</p>
                         </div>
                         <div class="grid grid-cols-3 gap-3 text-center mb-6 text-xs font-bold">
+                            <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200 shadow-xs"><span class="text-emerald-800 block text-sm">إجمالي الحضور بالفصل</span><span class="text-xl font-black text-emerald-600">${totalPresentsClass}</span></div>
                             <div class="bg-rose-50 p-3 rounded-2xl border border-rose-200 shadow-xs"><span class="text-rose-800 block text-sm">إجمالي الغياب بالفصل</span><span class="text-xl font-black text-rose-600">${totalAbsentsClass}</span></div>
                             <div class="bg-amber-50 p-3 rounded-2xl border border-amber-200 shadow-xs"><span class="text-amber-800 block text-sm">إجمالي التأخر بالفصل</span><span class="text-xl font-black text-amber-600">${totalLatesClass}</span></div>
-                            <div class="bg-sky-50 p-3 rounded-2xl border border-sky-200 shadow-xs"><span class="text-sky-800 block text-sm">إجمالي الاستئذان بالفصل</span><span class="text-xl font-black text-sky-600">${totalExcusesClass}</span></div>
                         </div>
                         <div class="overflow-x-auto border rounded-2xl shadow-xs">
                             <table class="w-full text-xs text-right border-collapse whitespace-nowrap">
                                 <thead style="background-color: #800000; color: #d4af37;">
                                     <tr>
-                                        <th style="padding: 12px;">#</th><th style="padding: 12px;">اسم الطالب</th><th style="padding: 12px; text-align: center;">غياب</th><th style="padding: 12px; text-align: center;">تأخر</th><th style="padding: 12px; text-align: center;">استئذان</th><th style="padding: 12px; text-align: center;">النقاط</th><th style="padding: 12px;">المشاركات الإيجابية</th><th style="padding: 12px;">الملاحظات السلبية</th><th style="padding: 12px;">الواجبات والملفات</th>
+                                        <th style="padding: 12px;">#</th><th style="padding: 12px;">اسم الطالب</th><th style="padding: 12px; text-align: center;">حضور</th><th style="padding: 12px; text-align: center;">غياب</th><th style="padding: 12px; text-align: center;">تاخر</th><th style="padding: 12px; text-align: center;">النقاط</th><th style="padding: 12px;">المشاركات الإيجابية</th><th style="padding: 12px;">الملاحظات السلبية</th><th style="padding: 12px;">الواجبات والملفات</th>
                                     </tr>
                                 </thead>
                                 <tbody>${students.length === 0 ? '<tr><td colspan="9" style="text-align: center; padding: 20px; color: #94a3b8;">لا توجد طلاب مسجلين في هذا الفصل</td></tr>' : studentsRowsHtml}</tbody>
@@ -1970,7 +1970,7 @@
             </div>
             
             <div class="mb-5">
-                <h4 class="font-bold text-slate-900 text-sm mb-3">📌 الحضور والغياب:</h4>
+                <h4 class="font-bold text-slate-900 text-sm mb-3">📌 الحضور والغياب والتأخر:</h4>
                 <div class="flex gap-3 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin">
                     <button onclick="recordAction('حاضر', 0, 'حاضر')" class="flex items-center gap-3 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition shadow-xs">
                         <span class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base shadow-2xs">🟢</span>
