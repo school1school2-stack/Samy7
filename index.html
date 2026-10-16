@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام متابعة الطلاب الشامل - د / سامي محمد العمر 👨‍🏫</title>
+    <title>نظام متابعة الطلاب الشامل - د/ سامي محمد العمر 👨‍🏫</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@400;600;700&family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
     
@@ -113,7 +113,7 @@
     </style>
 
     <script>
-        // إعدادات سحابة د /  سامي محمد العمر الخاصة والمستقلة
+        // إعدادات سحابة د/ سامي محمد العمر الخاصة والمستقلة[span_1](start_span)[span_1](end_span)
         const firebaseConfig = {
           apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
           authDomain: "samy-28452.firebaseapp.com",
@@ -458,7 +458,7 @@
 
             if(count > 0) {
                 await batch.commit();
-                alert(`تم رفع واعتماد ${count} طالب مباشرة في سحابة د. سامي بنجاح!`);
+                alert(`تم رفع واعتماد ${count} طالب مباشرة في سحابة د/ سامي بنجاح!`);
                 document.getElementById("bulkInput").value = "";
             } else {
                 alert("تنسيق غير معروف. تأكد من وجود الاسم والإيميل في سطرين متتاليين.");
@@ -486,7 +486,7 @@
         }
 
         async function deleteAllStudents() {
-            if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين لدكتور سامي؟")) return;
+            if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين لد/ سامي؟")) return;
             const snapshot = await db.collection("allowed_students").get();
             const batch = db.batch();
             snapshot.forEach(doc => batch.delete(doc.ref));
@@ -1088,7 +1088,7 @@
                 <div class="text-center mb-6 border-b pb-4">
                     <div class="w-20 h-20 ${btnPrimaryClass} text-white rounded-full flex items-center justify-center text-4xl font-bold mx-auto mb-2 shadow-md">👤</div>
                     <h2 class="student-name-font text-3xl text-slate-900">${student.name}</h2>
-                    <p class="text-sm font-bold text-slate-600 mt-1">${student.className} | منصة د / سامي محمد العمر 👨‍🏫</p>
+                    <p class="text-sm font-bold text-slate-600 mt-1">${student.className} | منصة د/ سامي محمد العمر 👨‍🏫</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -1187,7 +1187,7 @@
                     <div class="text-center border-b border-amber-200 pb-3 mb-4">
                         <h3 class="student-name-font text-2xl text-amber-950">📋 تقرير متابعة طالب مفصل</h3>
                         <p class="text-xs font-bold text-amber-800 mt-1">الطالب: ${student.name} | الصف: ${student.className}</p>
-                        <p class="text-[11px] text-amber-700 font-semibold mt-0.5">الدكتور سامي محمد العمر 👨‍🏫</p>
+                        <p class="text-[11px] text-amber-700 font-semibold mt-0.5">د/ سامي محمد العمر 👨‍🏫</p>
                     </div>
 
                     <div class="space-y-4 text-xs font-bold text-slate-800">
@@ -1268,7 +1268,7 @@
                             <span class="text-5xl mb-2 inline-block">🎓</span>
                             <h1 class="student-title text-3xl font-bold text-slate-900">${student.name}</h1>
                             <p class="text-sm font-bold text-amber-800 mt-1">الصف: ${student.className}</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">منصة د / سامي محمد العمر 👨‍🏫</p>
+                            <p class="text-xs text-slate-500 mt-1 font-semibold">منصة د/ سامي محمد العمر 👨‍🏫</p>
                         </div>
 
                         <div class="space-y-4 text-xs font-bold text-slate-800">
@@ -1339,7 +1339,7 @@
                         </div>
 
                         <div class="mt-8 text-center border-t pt-4 text-[11px] font-bold text-slate-500 flex justify-between">
-                            <span>د / سامي محمد العمر</span>
+                            <span>د/ سامي محمد العمر</span>
                             <span>الحقوق محفوظة 2026</span>
                             <span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
                         </div>
@@ -1437,7 +1437,7 @@
                     <div class="text-center border-b border-amber-200 pb-3 mb-6 sticky top-0 bg-white z-10 py-2">
                         <h3 class="student-name-font text-2xl text-slate-900">📊 التقرير الفردي المتسلسل لفصل: ${className}</h3>
                         <p class="text-xs font-bold text-amber-800 mt-1">إجمالي الطلاب: ${students.length} طالب | كل طالب بتقريره المستقل</p>
-                        <p class="text-[11px] text-slate-500 font-semibold mt-0.5">الدكتور سامي محمد العمر 👨‍🏫</p>
+                        <p class="text-[11px] text-slate-500 font-semibold mt-0.5">د/ سامي محمد العمر 👨‍🏫</p>
                     </div>
                     <div>${students.length === 0 ? '<p class="text-center p-6 text-slate-400 font-bold">لا توجد طلاب مسجلين في هذا الفصل</p>' : studentsCardsHtml}</div>
                 </div>
@@ -1532,11 +1532,11 @@
                             <span class="text-5xl mb-2 inline-block">🏫</span>
                             <h1 class="class-title text-3xl font-bold text-slate-900">التقرير الفردي الشامل لفصل: ${className}</h1>
                             <p class="text-sm font-bold text-amber-800 mt-1">إجمالي الطلاب: ${students.length} طالب (كل طالب بتقريره المستقل)</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">الدكتور سامي محمد العمر 👨‍🏫</p>
+                            <p class="text-xs text-slate-500 mt-1 font-semibold">د/ سامي محمد العمر 👨‍🏫</p>
                         </div>
                         <div>${students.length === 0 ? '<p style="text-align: center; padding: 30px; color: #94a3b8; font-weight: bold;">لا توجد طلاب مسجلين في هذا الفصل</p>' : studentsCardsHtml}</div>
                         <div class="mt-8 text-center border-t pt-4 text-xs font-bold text-slate-500 flex justify-between">
-                            <span>د / سامي محمد العمر</span>
+                            <span>د/ سامي محمد العمر</span>
                             <span>الحقوق محفوظة 2026</span>
                             <span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
                         </div>
@@ -1584,7 +1584,7 @@
                     <div class="text-center border-b border-amber-200 pb-3 mb-4">
                         <h3 class="student-name-font text-2xl text-slate-900">📊 جدول الفصل الشامل والمفصل: ${className}</h3>
                         <p class="text-xs font-bold text-amber-800 mt-1">إجمالي الطلاب: ${students.length} طالب | القرآن الكريم وعلومه</p>
-                        <p class="text-[11px] text-slate-500 font-semibold mt-0.5">الدكتور سامي محمد العمر 👨‍🏫</p>
+                        <p class="text-[11px] text-slate-500 font-semibold mt-0.5">د/ سامي محمد العمر 👨‍🏫</p>
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 text-center mb-4 text-xs font-bold">
@@ -1681,7 +1681,7 @@
                             <span class="text-5xl mb-2 inline-block">🏫</span>
                             <h1 class="class-title text-3xl font-bold text-slate-900">التقرير الشامل والمفصل لفصل: ${className}</h1>
                             <p class="text-sm font-bold text-amber-800 mt-1">إجمالي الطلاب المسجلين: ${students.length} طالب</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">الدكتور سامي محمد العمر 👨‍🏫</p>
+                            <p class="text-xs text-slate-500 mt-1 font-semibold">د/ سامي محمد العمر 👨‍🏫</p>
                         </div>
                         <div class="grid grid-cols-3 gap-3 text-center mb-6 text-xs font-bold">
                             <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200 shadow-xs"><span class="text-emerald-800 block text-sm">إجمالي الحضور بالفصل</span><span class="text-xl font-black text-emerald-600">${totalPresentsClass}</span></div>
@@ -1699,7 +1699,7 @@
                             </table>
                         </div>
                         <div class="mt-8 text-center border-t pt-4 text-xs font-bold text-slate-500 flex justify-between">
-                            <span>د / سامي محمد العمر</span><span>الحقوق محفوظة 2026</span><span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
+                            <span>د/ سامي محمد العمر</span><span>الحقوق محفوظة 2026</span><span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
                         </div>
                     </div>
                 </body>
@@ -1727,7 +1727,7 @@
         <div class="container mx-auto max-w-6xl flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="text-center sm:text-right">
                 <h1 class="text-lg font-black tracking-wide">نظام المتابعة السحابي الشامل</h1>
-                <p class="text-xs opacity-90 mt-0.5 font-bold">الدكتور سامي محمد العمر 👨‍🏫 | القرآن الكريم وعلومه</p>
+                <p class="text-xs opacity-90 mt-0.5 font-bold">د/ سامي محمد العمر 👨‍🏫 | القرآن الكريم وعلومه</p>
             </div>
             <div class="flex gap-2">
                 <button onclick="openSettingsModal('classes')" class="bg-black/5 hover:bg-black/10 text-slate-800 px-3 py-2 rounded-xl font-bold text-xs cursor-pointer border border-black/10 transition">🏫 الفصول</button>
@@ -1837,7 +1837,7 @@
     <!-- 3. التذييل السفلي الثابت (Footer) -->
     <footer id="main-footer" class="py-3 px-6 border-t shrink-0 z-30 transition-all duration-500">
         <div class="container mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-bold text-center sm:text-right">
-            <div>الدكتور سامي محمد العمر 👨‍🏫</div>
+            <div>د/ سامي محمد العمر 👨‍🏫</div>
             <div>الحقوق محفوظة 2026</div>
             <div>القرآن الكريم وعلومه</div>
         </div>
