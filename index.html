@@ -113,7 +113,7 @@
     </style>
 
     <script>
-        // إعدادات سحابة د /  سامي محمد العمر الخاصة والمستقلة (معرفات مشروع د. سامي)
+        // إعدادات سحابة الدكتور سامي محمد العمر الخاصة والمستقلة
         const firebaseConfig = {
           apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
           authDomain: "samy-28452.firebaseapp.com",
@@ -271,7 +271,7 @@
                         id: doc.id,
                         name: name,
                         email: email,
-                        className: data.className || 'غير موزع',
+                        className: data.className || 'غير موزاد',
                         phone: data.phone || '966566688614',
                         actions: data.actions || [],
                         attendanceStats: data.attendanceStats || { absents: 0, lates: 0, excuses: 0 }
@@ -618,7 +618,6 @@
             if (cleanName.includes('حاضر')) { return { title: 'حاضر', icon: '🟢' }; }
             if (cleanName.includes('غائب بعذر')) { return { title: 'غائب بعذر', icon: '👤' }; }
             if (cleanName.includes('غائب')) { return { title: 'غائب', icon: '🔴' }; }
-            if (cleanName.includes('مستأذن')) { return { title: 'مستأذن', icon: '🔵' }; }
             if (cleanName.includes('متأخر')) { return { title: 'متأخر', icon: '⏰' }; }
             if (cleanName.includes('عن بعد')) { return { title: 'عن بعد', icon: '💻' }; }
             if (cleanName.includes('هارب')) { return { title: 'هارب', icon: '🚶‍♂️' }; }
@@ -1984,10 +1983,6 @@
                     <button onclick="recordAction('غائب بعذر', 0, 'غائب بعذر')" class="flex items-center gap-3 bg-indigo-50 border border-indigo-300 hover:bg-indigo-100 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition shadow-xs">
                         <span class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-base shadow-2xs">👤</span>
                         <span class="font-bold text-sm text-indigo-900">غائب بعذر</span>
-                    </button>
-                    <button onclick="recordAction('مستأذن', 0, 'مستأذن')" class="flex items-center gap-3 bg-sky-50 border border-sky-300 hover:bg-sky-100 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition shadow-xs">
-                        <span class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center text-base shadow-2xs">🔵</span>
-                        <span class="font-bold text-sm text-sky-900">مستأذن</span>
                     </button>
                     <button onclick="recordAction('متأخر', 0, 'متأخر')" class="flex items-center gap-3 bg-amber-50 border border-amber-300 hover:bg-amber-100 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition shadow-xs">
                         <span class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base shadow-2xs">⏰</span>
