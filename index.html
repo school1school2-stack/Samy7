@@ -113,7 +113,7 @@
     </style>
 
     <script>
-        // إعدادات سحابة د/ سامي محمد العمر الخاصة والمستقلة[span_1](start_span)[span_1](end_span)
+        // إعدادات سحابة د/ سامي محمد العمر الخاصة والمستقلة
         const firebaseConfig = {
           apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
           authDomain: "samy-28452.firebaseapp.com",
@@ -138,40 +138,40 @@
         let editingActionIndex = null;
         let editingClassIndex = null;
         let pendingCountGlobal = 0;
+        let initialHashChecked = false;
 
-const motivationalQuotes = [
-    // العبارات السابقة
-    "✨ \"التعليم هو السلاح الأقوى الذي يمكنك استخدامه لتغيير العالم.\"",
-    "💡 \"النجاح ليس عدم تحقيق الأخطاء، بل هو عدم تكرار الأخطاء.\"",
-    "🌟 \"قمة المجد ليست في عدم السقوط أبداً، بل في القيام بعد كل سقوط.\"",
-    "📚 \"العلم نور والجهل ظلام.. والمواظبة هي طريق التميز والنجاح.\"",
-    "🚀 \"طريق الألف ميل يبدأ بفرصة وحصة دراسية واحدة، اجعل يومك مثمراً.\"",
-    "🏆 \"من فتح باب مدرسة، أغلق باب سجن.. تحية لكل طالب يطلب العلم بشغف.\"",
-    "🎯 \"الجهد الذي تبذله اليوم هو الحجر الأساس لمستقبل لافت ومشرق غداً.\"",
-    "🌱 \"كل خطوة صغيرة تقطعها اليوم نحو هدفك، تقربك مسافات طويلة نحو قمة النجاح.\"",
-    "🔥 \"لا تقارن نفسك بغيرك، بل قارن نفسك بما كنت عليه بالأمس، وحاول أن تكون أفضل دائماً.\"",
-    "🦅 \"العقبات والصعوبات ليست سوى حواجز اختبار لتعرف مدى إصرارك وقوتك الحقيقية.\"",
-    "⏳ \"الوقت الذي تستثمره في التعلم اليوم هو الأداة الأكثر قيمة التي تمتلكها لصناعة الغد.\"",
-    "💎 \"التعب الذي تشعر به أثناء الدراسة سيزول سريعاً، لكن فخر إنجازك سيبقى معك إلى الأبد.\"",
-    "🌟 \"استمر في السعي بثقة، فكل درس تتعلمه اليوم يضيف لبنة جديدة في جدار مستقبلك العظيم.\"",
-    "💪 \"النجاح يبدأ من الإيمان بقدرتك على تجاوز الصعاب مهما كانت معقدة.\"",
-    "🧠 \"عقلك هو أثمن ما تملك؛ استثمره بالقراءة والتعلم كل يوم لتصنع الفارق.\"",
-    "☀️ \"ابدأ صباحك بعزيمة متجددة، فاليوم هو فرصة جديدة لتحقيق ما لم تقم به بالأمس.\"",
-    "🔑 \"الانضباط هو الجسر الحقيقي الذي يربط بين أحلامك وبين إنجازاتها على أرض الواقع.\"",
-    "📖 \"كل صفحة تقرأها اليوم هي خطوة تفصلك عن الجهل وتقربك من التميز.\"",
-    "⚡ \"الشغف يمنحك البداية، لكن الاستمرارية والعزيمة هما ما يوصلانك إلى خط النهاية.\"",
-    "🌊 \"لا تخف من الأمواج العالية، فالسفن الماهرة تصنع أروع إنجازاتها في البحار الثائرة.\"",
-    "🎨 \"مستقبلك لوحة فنية، وأنت من تختار الألوان والجهد الذي تضعه لتخرج في أبهى صورة.\"",
-    "⛰️ \"الجبال العالية لا تتسلق بلمح البصر، بل بخطوات ثابتة وواثقة نحو القمة.\"",
-    "🔮 \"أفضل طريقة لتنبؤ مستقبلك هي أن تقوم بصناعته بنفسك اليوم، خطوة بخطوة.\"",
-    "🛡️ \"الأخطاء ليست نهاية المطاف، بل هي الدروس المجانية التي تجعلنا أكثر ذكاءً وقوة.\"",
-    "⚓ \"كن صبوراً، فالأشجار العميقة الجذور هي وحدها التي تقاوم أقوى العواصف.\"",
-    "🌠 \"الأحلام الكبيرة تحتاج إلى جهود عظيمة، فلا تستصغر أي جهد قمت به اليوم.\"",
-    "🛠️ \"العلم في الصغر كالنقش على الحجر، وكل معلومة تكتسبها هي كنز يبقى معك للأبد.\"",
-    "🧭 \"دع شغفك هو بوصلتك، وعملك الجاد هو وقودك، ولا تيأس مهما كانت المسافة طويلة.\"",
-    "✍️ \"اكتب نجاحك اليوم بعرق جبينك وإصرارك، لتقرأه بفخر واعتزاز غداً.\"",
-    "👑 \"التميز ليس مصادفة، بل هو ثمرة التخطيط المستمر، والعمل الجاد، وعدم الاستسلام.\""
-];
+        const motivationalQuotes = [
+            "✨ \"التعليم هو السلاح الأقوى الذي يمكنك استخدامه لتغيير العالم.\"",
+            "💡 \"النجاح ليس عدم تحقيق الأخطاء، بل هو عدم تكرار الأخطاء.\"",
+            "🌟 \"قمة المجد ليست في عدم السقوط أبداً، بل في القيام بعد كل سقوط.\"",
+            "📚 \"العلم نور والجهل ظلام.. والمواظبة هي طريق التميز والنجاح.\"",
+            "🚀 \"طريق الألف ميل يبدأ بفرصة وحصة دراسية واحدة، اجعل يومك مثمراً.\"",
+            "🏆 \"من فتح باب مدرسة، أغلق باب سجن.. تحية لكل طالب يطلب العلم بشغف.\"",
+            "🎯 \"الجهد الذي تبذله اليوم هو الحجر الأساس لمستقبل لافت ومشرق غداً.\"",
+            "🌱 \"كل خطوة صغيرة تقطعها اليوم نحو هدفك، تقربك مسافات طويلة نحو قمة النجاح.\"",
+            "🔥 \"لا تقارن نفسك بغيرك، بل قارن نفسك بما كنت عليه بالأمس، وحاول أن تكون أفضل دائماً.\"",
+            "🦅 \"العقبات والصعوبات ليست سوى حواجز اختبار لتعرف مدى إصرارك وقوتك الحقيقية.\"",
+            "⏳ \"الوقت الذي تستثمره في التعلم اليوم هو الأداة الأكثر قيمة التي تمتلكها لصناعة الغد.\"",
+            "💎 \"التعب الذي تشعر به أثناء الدراسة سيزول سريعاً، لكن فخر إنجازك سيبقى معك إلى الأبد.\"",
+            "🌟 \"استمر في السعي بثقة، فكل درس تتعلمه اليوم يضيف لبنة جديدة في جدار مستقبلك العظيم.\"",
+            "💪 \"النجاح يبدأ من الإيمان بقدرتك على تجاوز الصعاب مهما كانت معقدة.\"",
+            "🧠 \"عقلك هو أثمن ما تملك؛ استثمره بالقراءة والتعلم كل يوم لتصنع الفارق.\"",
+            "☀️ \"ابدأ صباحك بعزيمة متجددة، فاليوم هو فرصة جديدة لتحقيق ما لم تقم به بالأمس.\"",
+            "🔑 \"الانضباط هو الجسر الحقيقي الذي يربط بين أحلامك وبين إنجازاتها على أرض الواقع.\"",
+            "📖 \"كل صفحة تقرأها اليوم هي خطوة تفصلك عن الجهل وتقربك من التميز.\"",
+            "⚡ \"الشغف يمنحك البداية، لكن الاستمرارية والعزيمة هما ما يوصلانك إلى خط النهاية.\"",
+            "🌊 \"لا تخف من الأمواج العالية، فالسفن الماهرة تصنع أروع إنجازاتها في البحار الثائرة.\"",
+            "🎨 \"مستقبلك لوحة فنية، وأنت من تختار الألوان والجهد الذي تضعه لتخرج في أبهى صورة.\"",
+            "⛰️ \"الجبال العالية لا تتسلق بلمح البصر، بل بخطوات ثابتة وواثقة نحو القمة.\"",
+            "🔮 \"أفضل طريقة لتنبؤ مستقبلك هي أن تقوم بصناعته بنفسك اليوم، خطوة بخطوة.\"",
+            "🛡️ \"الأخطاء ليست نهاية المطاف، بل هي الدروس المجانية التي تجعلنا أكثر ذكاءً وقوة.\"",
+            "⚓ \"كن صبوراً، فالأشجار العميقة الجذور هي وحدها التي تقاوم أقوى العواصف.\"",
+            "🌠 \"الأحلام الكبيرة تحتاج إلى جهود عظيمة، فلا تستصغر أي جهد قمت به اليوم.\"",
+            "🛠️ \"العلم في الصغر كالنقش على الحجر، وكل معلومة تكتسبها هي كنز يبقى معك للأبد.\"",
+            "🧭 \"دع شغفك هو بوصلتك، وعملك الجاد هو وقودك، ولا تيأس مهما كانت المسافة طويلة.\"",
+            "✍️ \"اكتب نجاحك اليوم بعرق جبينك وإصرارك، لتقرأه بفخر واعتزاز غداً.\"",
+            "👑 \"التميز ليس مصادفة، بل هو ثمرة التخطيط المستمر، والعمل الجاد، وعدم الاستسلام.\""
+        ];
 
         const themes = [
             { name: "العاجي الفاخر", bg: "linear-gradient(135deg, #fffdfa 0%, #f7f3eb 100%)", headerBg: "bg-amber-50 text-amber-950 border-amber-200/80", btnPrimary: "bg-amber-900 hover:bg-amber-950 text-amber-50" },
@@ -343,6 +343,12 @@ const motivationalQuotes = [
                 renderView();
                 searchStudents();
                 if(activeClass) renderClassStudents();
+
+                // قراءة الهاش الممتد في نهاية الرابط عند التكليف الأولي
+                if (!initialHashChecked && allStudents.length > 0) {
+                    initialHashChecked = true;
+                    checkUrlHashAndOpenReport();
+                }
             });
 
             db.collection("pending_students").orderBy("name").onSnapshot((snapshot) => {
@@ -370,6 +376,32 @@ const motivationalQuotes = [
                     }
                 });
             });
+        }
+
+        // قراءة الهاش الممتد من نهاية الرابط وبناء التقرير التلقائي
+        function checkUrlHashAndOpenReport() {
+            const hash = decodeURIComponent(window.location.hash);
+            if (!hash) return;
+
+            const parts = hash.replace('#', '').split('/');
+            const type = parts[0];          // 'student' أو 'class'
+            const targetName = parts[1];    // اسم الطالب أو الفصل
+            const reportType = parts[2] || 'detailed'; // نوع تقرير الفصل
+
+            if (type === 'student' && targetName) {
+                const student = allStudents.find(s => s.name.trim() === targetName.trim() || s.id === targetName);
+                if (student) {
+                    openPreviewSummaryModal(student.id);
+                } else {
+                    alert(`تنبيه: لم يتم العثور على بيانات الطالب (${targetName}) في السحابة.`);
+                }
+            } else if (type === 'class' && targetName) {
+                if (classList.includes(targetName) || allStudents.some(s => s.className === targetName)) {
+                    openClassReportPreview(targetName, reportType);
+                } else {
+                    alert(`تنبيه: لم يتم العثور على الفصل (${targetName}).`);
+                }
+            }
         }
 
         window.handleAction = async function(selectElement, email, currentName, studentId) {
@@ -1189,7 +1221,7 @@ const motivationalQuotes = [
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
                     <button onclick="openPreviewSummaryModal('${student.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs cursor-pointer shadow-md text-center flex items-center justify-center gap-1">👁️ معاينة الملخص</button>
-                    <button onclick="shareStudentReportLink('${student.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs cursor-pointer shadow-md text-center flex items-center justify-center gap-1">🌐 فتح التقرير كموقع</button>
+                    <button onclick="shareStudentReportLink('${student.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs cursor-pointer shadow-md text-center flex items-center justify-center gap-1">🌐 مشاركة رابط التقرير</button>
                     <button onclick="window.print()" class="${btnPrimaryClass} text-white py-3 rounded-xl font-bold text-xs cursor-pointer shadow-md text-center flex items-center justify-center gap-1">🖨️ طباعة</button>
                     <button onclick="closeModal()" class="bg-slate-200 text-slate-800 py-3 rounded-xl font-bold text-xs hover:bg-slate-300 cursor-pointer shadow-md text-center">إغلاق</button>
                 </div>
@@ -1251,7 +1283,7 @@ const motivationalQuotes = [
                 </div>
 
                 <div class="flex gap-3">
-                    <button onclick="shareStudentReportLink('${student.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl text-xs font-bold shadow-md cursor-pointer text-center">🌐 فتح التقرير كموقع</button>
+                    <button onclick="shareStudentReportLink('${student.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl text-xs font-bold shadow-md cursor-pointer text-center">🌐 مشاركة رابط التقرير</button>
                     <button onclick="closePreviewSummaryModal()" class="bg-slate-200 text-slate-800 px-6 py-3 rounded-2xl text-xs font-bold hover:bg-slate-300 cursor-pointer shadow-md">إغلاق</button>
                 </div>
             `;
@@ -1265,116 +1297,20 @@ const motivationalQuotes = [
             document.getElementById('preview-modal').classList.remove('flex');
         };
 
+        // دالة مشاركة رابط تقرير الطالب مع تضمين اسم الطالب بنهاية الرابط
         window.shareStudentReportLink = function(id) {
             const student = allStudents.find(s => s.id === id);
             if (!student) return;
 
-            const summary = calculateStudentSummaryData(student);
-            const { att } = summary;
+            const shareUrl = `${window.location.origin}${window.location.pathname}#student/${encodeURIComponent(student.name)}`;
 
-            const webPageHTML = `
-                <!DOCTYPE html>
-                <html lang="ar" dir="rtl">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>تقرير الطالب: ${student.name}</title>
-                    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
-                    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Tajawal', sans-serif; background-color: #fdfaf1; }
-                        .student-title { font-family: 'Amiri', serif; }
-                    </style>
-                </head>
-                <body class="p-4 md:p-8 flex justify-center items-center min-h-screen">
-                    <div class="max-w-xl w-full bg-white border-2 border-amber-200 p-6 md:p-8 rounded-3xl shadow-2xl">
-                        
-                        <div class="text-center border-b border-amber-200 pb-4 mb-6">
-                            <span class="text-5xl mb-2 inline-block">🎓</span>
-                            <h1 class="student-title text-3xl font-bold text-slate-900">${student.name}</h1>
-                            <p class="text-sm font-bold text-amber-800 mt-1">الصف: ${student.className}</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">منصة د/ سامي محمد العمر 👨‍🏫</p>
-                        </div>
-
-                        <div class="space-y-4 text-xs font-bold text-slate-800">
-                            
-                            <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 shadow-xs">
-                                <span class="text-amber-950 font-black text-sm block mb-1">📌 سجل الحضور والغياب والتأخر:</span>
-                                <div class="flex justify-between text-slate-700 my-2 px-2 border-b border-amber-200 pb-2">
-                                    <span>🟢 حضور: <strong class="text-emerald-600">${att.presents || 0}</strong></span>
-                                    <span>🔴 غياب: <strong class="text-rose-600">${att.absents || 0}</strong></span>
-                                    <span>⏰ تاخر: <strong class="text-amber-600">${att.lates || 0}</strong></span>
-                                </div>
-                                ${summary.attendanceEventsList.length === 0 ? 
-                                    '<p class="text-emerald-700 font-semibold mt-1">منتظم بالحضور والدوام ✨</p>' : 
-                                    `<ul class="list-disc list-inside text-slate-700 space-y-1 mt-2">
-                                        ${summary.attendanceEventsList.map(item => `<li><span class="font-bold text-rose-800">${item.title}</span> - <span class="text-[11px] text-slate-500">${item.timestamp}</span></li>`).join('')}
-                                    </ul>`
-                                }
-                            </div>
-
-                            <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200 shadow-xs">
-                                <span class="text-emerald-950 font-black text-sm block mb-1">💡 التفاعل والمشاركات الإيجابية:</span>
-                                <div class="grid grid-cols-2 gap-2 text-center mt-2">
-                                    <div class="bg-white p-2.5 rounded-xl border border-emerald-200">
-                                        <span class="text-slate-600 block text-[11px]">مشاركات اليوم</span>
-                                        <span class="text-emerald-600 font-black text-base">${summary.positiveCountToday}</span>
-                                    </div>
-                                    <div class="bg-white p-2.5 rounded-xl border border-emerald-200">
-                                        <span class="text-slate-600 block text-[11px]">إجمالي النقاط المكتسبة</span>
-                                        <span class="text-emerald-600 font-black text-base">+${summary.totalPositiveScore}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-rose-50/60 p-4 rounded-2xl border border-rose-200 shadow-xs">
-                                <span class="text-rose-950 font-black text-sm block mb-1">⚠️ الملاحظات والسلوكيات:</span>
-                                ${summary.negativeList.length === 0 ? 
-                                    '<p class="text-emerald-600 font-semibold mt-1">لا توجد ملاحظات سلبية مسجلة (سلوك ممتاز) ✨</p>' : 
-                                    `<ul class="list-disc list-inside text-rose-700 space-y-1 mt-2">
-                                        ${summary.negativeList.map(item => `<li><span class="font-bold text-rose-900">${item.title}</span> - <span class="text-[11px] text-slate-600">${item.timestamp}</span></li>`).join('')}
-                                    </ul>`
-                                }
-                            </div>
-
-                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-xs">
-                                <span class="text-slate-900 font-black text-sm block mb-1">📘 الواجبات والملفات:</span>
-                                <div class="space-y-2 text-slate-700 mt-2">
-                                    <div>
-                                        <span class="font-bold text-slate-800 block">متابعة الواجبات:</span>
-                                        ${summary.homeworkList.length > 0 ? 
-                                            `<ul class="list-disc list-inside text-slate-600 text-[11px] space-y-0.5 mt-1">
-                                                ${summary.homeworkList.map(h => `<li>${h.title} (${h.timestamp})</li>`).join('')}
-                                            </ul>` : 
-                                            '<span class="text-emerald-600 font-bold text-[11px]">منتظم وبدون ملاحظات واجبات</span>'
-                                        }
-                                    </div>
-                                    <div class="pt-1 border-t border-slate-200">
-                                        <span class="font-bold text-slate-800 block">الملف المدرسي:</span>
-                                        ${summary.portfolioList.length > 0 ? 
-                                            `<ul class="list-disc list-inside text-slate-600 text-[11px] space-y-0.5 mt-1">
-                                                ${summary.portfolioList.map(p => `<li>${p.title} (${p.timestamp})</li>`).join('')}
-                                            </ul>` : 
-                                            '<span class="text-emerald-600 font-bold text-[11px]">مكتمل ومستوفي المطلوب</span>'
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="mt-8 text-center border-t pt-4 text-[11px] font-bold text-slate-500 flex justify-between">
-                            <span>د/ سامي محمد العمر</span>
-                            <span>الحقوق محفوظة 2026</span>
-                            <span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob([webPageHTML], { type: 'text/html' });
-            window.open(URL.createObjectURL(blob), '_blank');
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`تم نسخ رابط تقرير الطالب (${student.name}) بنجاح! 🌐\n\nيمكنك الآن إرساله وسيفتح مباشرة على أي جهاز:\n${shareUrl}`);
+                });
+            } else {
+                prompt("قم بنسخ الرابط التالي لمشاركته:", shareUrl);
+            }
         };
 
         window.openClassReportPreview = function(className, type) {
@@ -1385,11 +1321,16 @@ const motivationalQuotes = [
             }
         };
 
+        // دالة مشاركة رابط تقرير الفصل مع تضمين اسم الفصل بنهاية الرابط
         window.shareClassReportLink = function(className, type) {
-            if (type === 'detailed') {
-                shareDetailedClassReportLink(className);
+            const shareUrl = `${window.location.origin}${window.location.pathname}#class/${encodeURIComponent(className)}/${type}`;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`تم نسخ رابط تقرير (${className}) بنجاح! 🌐\n\nيمكنك الآن إرساله وسيفتح مباشرة على أي جهاز:\n${shareUrl}`);
+                });
             } else {
-                shareTableClassReportLink(className);
+                prompt("قم بنسخ الرابط التالي لمشاركته:", shareUrl);
             }
         };
 
@@ -1476,104 +1417,6 @@ const motivationalQuotes = [
             document.getElementById('preview-modal').classList.add('flex');
         }
 
-        function shareDetailedClassReportLink(className) {
-            const students = allStudents.filter(s => s.className === className);
-            
-            let studentsCardsHtml = students.map((st, idx) => {
-                const sum = calculateStudentSummaryData(st);
-                const { att } = sum;
-
-                let negativeHtml = sum.negativeList.length === 0 ? 
-                    '<p style="color: #059669; font-weight: 600; margin-top: 4px;">لا توجد ملاحظات سلبية مسجلة (سلوك ممتاز) ✨</p>' : 
-                    `<ul style="list-style-type: disc; margin-right: 18px; color: #b91c1c; margin-top: 4px;">
-                        ${sum.negativeList.map(item => `<li>${item.title} (${item.timestamp})</li>`).join('')}
-                    </ul>`;
-
-                let attendanceHtml = sum.attendanceEventsList.length === 0 ?
-                    '<p style="color: #047857; font-weight: 600; margin-top: 4px;">منتظم بالحضور والدوام ✨</p>' :
-                    `<ul style="list-style-type: disc; margin-right: 18px; color: #334155; margin-top: 4px;">
-                        ${sum.attendanceEventsList.map(item => `<li><strong style="color: #b91c1c;">${item.title}</strong> - <span style="font-size: 11px; color: #64748b;">${item.timestamp}</span></li>`).join('')}
-                    </ul>`;
-
-                return `
-                    <div style="background-color: #fffdfa; border: 2px solid #fde68a; padding: 20px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #fde68a; padding-bottom: 12px; margin-bottom: 15px;">
-                            <div>
-                                <h3 style="font-family: 'Amiri', serif; font-size: 1.5rem; color: #78350f; margin: 0;">🎓 ${idx + 1}. الطالب: ${st.name}</h3>
-                                <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">البريد: ${st.email || 'بدون إيميل'}</p>
-                            </div>
-                            <div style="background: white; padding: 8px 14px; border-radius: 14px; border: 1px solid #fde68a; text-align: center;">
-                                <span style="display: block; font-size: 10px; color: #64748b; font-weight: bold;">النقاط الكلية</span>
-                                <span style="font-size: 1.1rem; font-weight: 900; color: ${sum.totalScore >= 0 ? '#059669' : '#dc2626'};">${sum.totalScore > 0 ? '+' + sum.totalScore : sum.totalScore}</span>
-                            </div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px; color: #1e293b;">
-                            <div style="background: white; padding: 14px; border-radius: 14px; border: 1px solid #fef3c7;">
-                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">📌 سجل الحضور والغياب والتأخر:</strong>
-                                <div style="display: flex; gap: 15px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #f8fafc;">
-                                    <span>🟢 حضور: <strong style="color: #059669;">${att.presents || 0}</strong></span>
-                                    <span>🔴 غياب: <strong style="color: #dc2626;">${att.absents || 0}</strong></span>
-                                    <span>⏰ تاخر: <strong style="color: #d97706;">${att.lates || 0}</strong></span>
-                                </div>
-                                ${attendanceHtml}
-                            </div>
-                            <div style="background: white; padding: 14px; border-radius: 14px; border: 1px solid #fef3c7;">
-                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">💡 التفاعل والمشاركات الإيجابية:</strong>
-                                <p style="margin: 4px 0; color: #475569;">مشاركات اليوم: <strong style="color: #059669;">${sum.positiveCountToday}</strong></p>
-                                <p style="margin: 4px 0; color: #475569;">إجمالي النقاط الإيجابية: <strong style="color: #059669;">+${sum.totalPositiveScore}</strong></p>
-                            </div>
-                            <div style="background: white; padding: 14px; border-radius: 14px; border: 1px solid #fef3c7;">
-                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">⚠️ الملاحظات والسلوكيات السلبية:</strong>
-                                ${negativeHtml}
-                            </div>
-                            <div style="background: white; padding: 14px; border-radius: 14px; border: 1px solid #fef3c7;">
-                                <strong style="display: block; margin-bottom: 6px; font-size: 13px;">📘 الواجبات والملفات المدرسية:</strong>
-                                <p style="margin: 4px 0; color: #475569;">متابعة الواجبات: ${sum.homeworkList.length > 0 ? sum.homeworkList.map(h => `${h.title} (${h.timestamp})`).join('، ') : 'منتظم'}</p>
-                                <p style="margin: 4px 0; color: #475569;">الملف المدرسي: ${sum.portfolioList.length > 0 ? sum.portfolioList.map(p => `${p.title} (${p.timestamp})`).join('، ') : 'مكتمل'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            const webPageHTML = `
-                <!DOCTYPE html>
-                <html lang="ar" dir="rtl">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>التقرير الفردي الشامل لفصل: ${className}</title>
-                    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
-                    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Tajawal', sans-serif; background-color: #fdfaf1; }
-                        .class-title { font-family: 'Amiri', serif; }
-                    </style>
-                </head>
-                <body class="p-4 md:p-8 flex justify-center items-center min-h-screen">
-                    <div class="max-w-4xl w-full bg-white border-2 border-amber-200 p-6 md:p-8 rounded-3xl shadow-2xl">
-                        <div class="text-center border-b border-amber-200 pb-4 mb-6">
-                            <span class="text-5xl mb-2 inline-block">🏫</span>
-                            <h1 class="class-title text-3xl font-bold text-slate-900">التقرير الفردي الشامل لفصل: ${className}</h1>
-                            <p class="text-sm font-bold text-amber-800 mt-1">إجمالي الطلاب: ${students.length} طالب (كل طالب بتقريره المستقل)</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">د/ سامي محمد العمر 👨‍🏫</p>
-                        </div>
-                        <div>${students.length === 0 ? '<p style="text-align: center; padding: 30px; color: #94a3b8; font-weight: bold;">لا توجد طلاب مسجلين في هذا الفصل</p>' : studentsCardsHtml}</div>
-                        <div class="mt-8 text-center border-t pt-4 text-xs font-bold text-slate-500 flex justify-between">
-                            <span>د/ سامي محمد العمر</span>
-                            <span>الحقوق محفوظة 2026</span>
-                            <span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob([webPageHTML], { type: 'text/html' });
-            window.open(URL.createObjectURL(blob), '_blank');
-        }
-
         function openTableClassReportPreview(className) {
             const students = allStudents.filter(s => s.className === className);
             let totalPresentsClass = 0, totalAbsentsClass = 0, totalLatesClass = 0;
@@ -1655,84 +1498,6 @@ const motivationalQuotes = [
 
             document.getElementById('preview-modal').classList.remove('hidden');
             document.getElementById('preview-modal').classList.add('flex');
-        }
-
-        function shareTableClassReportLink(className) {
-            const students = allStudents.filter(s => s.className === className);
-            let totalPresentsClass = 0, totalAbsentsClass = 0, totalLatesClass = 0;
-
-            let studentsRowsHtml = students.map((st, idx) => {
-                const sum = calculateStudentSummaryData(st);
-                totalPresentsClass += sum.att.presents || 0;
-                totalAbsentsClass += sum.att.absents || 0;
-                totalLatesClass += sum.att.lates || 0;
-
-                let homeworkText = sum.homeworkList.length > 0 ? sum.homeworkList.map(h => h.title).join('، ') : 'منتظم';
-                let portfolioText = sum.portfolioList.length > 0 ? sum.portfolioList.map(p => p.title).join('، ') : 'مكتمل';
-                let negativeText = sum.negativeList.length > 0 ? sum.negativeList.map(n => n.title).join('، ') : 'لا يوجد';
-
-                return `
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 10px; font-weight: bold;">${idx + 1}</td>
-                        <td style="padding: 10px; font-weight: bold; color: #1e293b;">${st.name}</td>
-                        <td style="padding: 10px; text-align: center; color: #059669; font-weight: bold;">${sum.att.presents || 0}</td>
-                        <td style="padding: 10px; text-align: center; color: #dc2626; font-weight: bold;">${sum.att.absents || 0}</td>
-                        <td style="padding: 10px; text-align: center; color: #d97706; font-weight: bold;">${sum.att.lates || 0}</td>
-                        <td style="padding: 10px; text-align: center; font-weight: 900; color: ${sum.totalScore >= 0 ? '#059669' : '#dc2626'};">${sum.totalScore > 0 ? '+' + sum.totalScore : sum.totalScore}</td>
-                        <td style="padding: 10px; font-size: 11px; color: #047857; font-weight: bold;">+${sum.totalPositiveScore} (${sum.positiveCountTotal} مشاركة)</td>
-                        <td style="padding: 10px; font-size: 11px; color: #b91c1c; font-weight: bold;">${negativeText}</td>
-                        <td style="padding: 10px; font-size: 11px; color: #334155;">${homeworkText} / ${portfolioText}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            const webPageHTML = `
-                <!DOCTYPE html>
-                <html lang="ar" dir="rtl">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>التقرير الشامل لفصل: ${className}</title>
-                    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
-                    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Tajawal', sans-serif; background-color: #fdfaf1; }
-                        .class-title { font-family: 'Amiri', serif; }
-                    </style>
-                </head>
-                <body class="p-4 md:p-8 flex justify-center items-center min-h-screen">
-                    <div class="max-w-6xl w-full bg-white border-2 border-amber-200 p-6 md:p-8 rounded-3xl shadow-2xl">
-                        <div class="text-center border-b border-amber-200 pb-4 mb-6">
-                            <span class="text-5xl mb-2 inline-block">🏫</span>
-                            <h1 class="class-title text-3xl font-bold text-slate-900">التقرير الشامل والمفصل لفصل: ${className}</h1>
-                            <p class="text-sm font-bold text-amber-800 mt-1">إجمالي الطلاب المسجلين: ${students.length} طالب</p>
-                            <p class="text-xs text-slate-500 mt-1 font-semibold">د/ سامي محمد العمر 👨‍🏫</p>
-                        </div>
-                        <div class="grid grid-cols-3 gap-3 text-center mb-6 text-xs font-bold">
-                            <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200 shadow-xs"><span class="text-emerald-800 block text-sm">إجمالي الحضور بالفصل</span><span class="text-xl font-black text-emerald-600">${totalPresentsClass}</span></div>
-                            <div class="bg-rose-50 p-3 rounded-2xl border border-rose-200 shadow-xs"><span class="text-rose-800 block text-sm">إجمالي الغياب بالفصل</span><span class="text-xl font-black text-rose-600">${totalAbsentsClass}</span></div>
-                            <div class="bg-amber-50 p-3 rounded-2xl border border-amber-200 shadow-xs"><span class="text-amber-800 block text-sm">إجمالي التأخر بالفصل</span><span class="text-xl font-black text-amber-600">${totalLatesClass}</span></div>
-                        </div>
-                        <div class="overflow-x-auto border rounded-2xl shadow-xs">
-                            <table class="w-full text-xs text-right border-collapse whitespace-nowrap">
-                                <thead style="background-color: #800000; color: #d4af37;">
-                                    <tr>
-                                        <th style="padding: 12px;">#</th><th style="padding: 12px;">اسم الطالب</th><th style="padding: 12px; text-align: center;">حضور</th><th style="padding: 12px; text-align: center;">غياب</th><th style="padding: 12px; text-align: center;">تاخر</th><th style="padding: 12px; text-align: center;">النقاط</th><th style="padding: 12px;">المشاركات الإيجابية</th><th style="padding: 12px;">الملاحظات السلبية</th><th style="padding: 12px;">الواجبات والملفات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${students.length === 0 ? '<tr><td colspan="9" style="text-align: center; padding: 20px; color: #94a3b8;">لا توجد طلاب مسجلين في هذا الفصل</td></tr>' : studentsRowsHtml}</tbody>
-                            </table>
-                        </div>
-                        <div class="mt-8 text-center border-t pt-4 text-xs font-bold text-slate-500 flex justify-between">
-                            <span>د/ سامي محمد العمر</span><span>الحقوق محفوظة 2026</span><span>منصة القرآن الكريم وعلومه 👨‍🏫</span>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob([webPageHTML], { type: 'text/html' });
-            window.open(URL.createObjectURL(blob), '_blank');
         }
 
         window.closeModal = function() {
