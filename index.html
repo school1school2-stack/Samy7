@@ -140,9 +140,9 @@
         let pendingCountGlobal = 0;
         let initialHashChecked = false;
 
-        // متغيرات الحماية والأمان بالرقم السري
+        // متغيرات الأمان بالرقم السري للموقع كامل
         let storedPasscode = null;
-        let pendingAdminAction = null;
+        let isSystemUnlocked = false;
 
         const motivationalQuotes = [
             "✨ \"التعليم هو السلاح الأقوى الذي يمكنك استخدامه لتغيير العالم.\"",
@@ -208,10 +208,9 @@
                 quoteEl.innerText = randomQuote;
             }
 
-            // تطبيق لون الثيم على زر نافذة الرقم السري
             const passcodeBtn = document.getElementById('passcode-submit-btn');
             if(passcodeBtn) {
-                passcodeBtn.className = `w-full ${selectedTheme.btnPrimary} py-3 rounded-xl font-bold text-xs shadow-md transition cursor-pointer mt-2`;
+                passcodeBtn.className = `w-full ${selectedTheme.btnPrimary} py-3.5 rounded-xl font-bold text-xs shadow-md transition cursor-pointer mt-2`;
             }
 
             window.currentTheme = selectedTheme;
@@ -233,59 +232,78 @@
             { icon: '🎁', name: 'هدية', score: 5.0, color: '#e17055' }
         ];
 
-        function initSystem() {
+        async function initSystem() {
             applyRandomTheme();
             customActions = defaultActions;
-            fetchPasscodeFromCloud();
-            fetchClassesAndStudents();
+            await fetchPasscodeFromCloud();
+            
+            // التحقق مما إذا كان المستخدم يفتح رابط تقرير مشارك بشكل مباشر
+            const hash = decodeURIComponent(window.location.hash);
+            if (hash && (hash.startsWith('#student/') || hash.startsWith('#class/'))) {
+                // فتح التقرير المشارك مباشرة بدون قفل النظام الرئيسي
+                hideLockScreen();
+                fetchClassesAndStudents();
+            } else {
+                // فتح رابط الموقع الأساسي يتطلب إدخال الرقم السري أولاً
+                showLockScreen();
+                fetchClassesAndStudents();
+            }
+
             renderCustomActionsUI();
             renderSettingsActionsDropdown();
             initPullToRefresh();
         }
 
-        // جلب الرقم السري المحفوظ بالسحابة
         async function fetchPasscodeFromCloud() {
             try {
                 const doc = await db.collection("system_settings").doc("admin_passcode").get();
                 if (doc.exists && doc.data().passcode) {
                     storedPasscode = doc.data().passcode;
                 } else {
-                    storedPasscode = null; // لم يحدد بعد
+                    storedPasscode = null;
                 }
             } catch (e) {
                 console.error("خطأ قراءة الرقم السري من السحابة", e);
             }
         }
 
-        // التحقق من الحماية بالرقم السري قبل الدخول للوحة التحكم أو الإعدادات
-        window.requireAdminAuth = function(actionCallback) {
-            pendingAdminAction = actionCallback;
+        function showLockScreen() {
+            document.getElementById('main-header').classList.add('hidden');
+            document.getElementById('main-scroll-container').classList.add('hidden');
+            document.getElementById('main-footer').classList.add('hidden');
+
             const modal = document.getElementById('passcode-modal');
             const titleEl = document.getElementById('passcode-modal-title');
             const descEl = document.getElementById('passcode-modal-desc');
-            const inputEl = document.getElementById('passcode-input');
             const confirmGroup = document.getElementById('passcode-confirm-group');
-            const confirmInput = document.getElementById('passcode-confirm-input');
             const errorEl = document.getElementById('passcode-error');
 
-            inputEl.value = '';
-            confirmInput.value = '';
+            document.getElementById('passcode-input').value = '';
+            document.getElementById('passcode-confirm-input').value = '';
             errorEl.innerText = '';
 
             if (storedPasscode === null) {
-                titleEl.innerText = "🔑 تعيين رقم سري لأول مرة";
-                descEl.innerText = "أهلاً دكتور سامي! يرجى إدخال رقم سري لحماية لوحة التحكم والإعدادات وحفظه في السحابة:";
+                titleEl.innerText = "🔑 تعيين رقم سري للموقع أول مرة";
+                descEl.innerText = "أهلاً دكتور سامي! يرجى إنشاء رقم سري لحماية كافة بيانات الموقع وحفظه في السحابة:";
                 confirmGroup.classList.remove('hidden');
             } else {
-                titleEl.innerText = "🔒 دخول لوحة التحكم الإدارية";
-                descEl.innerText = "يرجى إدخال الرقم السري المعتمد للدخول إلى التحكم والإعدادات:";
+                titleEl.innerText = "🔒 نظام متابعة الطلاب مقفل";
+                descEl.innerText = "يرجى إدخال الرقم السري الخاص بالدكتور سامي لدخول النظام:";
                 confirmGroup.classList.add('hidden');
             }
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            setTimeout(() => inputEl.focus(), 100);
-        };
+        }
+
+        function hideLockScreen() {
+            document.getElementById('passcode-modal').classList.add('hidden');
+            document.getElementById('passcode-modal').classList.remove('flex');
+            document.getElementById('main-header').classList.remove('hidden');
+            document.getElementById('main-scroll-container').classList.remove('hidden');
+            document.getElementById('main-footer').classList.remove('hidden');
+            isSystemUnlocked = true;
+        }
 
         window.submitPasscodeAuth = async function() {
             const inputVal = document.getElementById('passcode-input').value.trim();
@@ -310,26 +328,18 @@
                 try {
                     await db.collection("system_settings").doc("admin_passcode").set({ passcode: inputVal });
                     storedPasscode = inputVal;
-                    alert("تم حفظ الرقم السري بنجاح في السحابة! 🔒");
-                    closePasscodeModal();
-                    if (pendingAdminAction) pendingAdminAction();
+                    alert("تم تعيين الرقم السري للموقع بنجاح في السحابة! 🔒");
+                    hideLockScreen();
                 } catch (e) {
-                    errorEl.innerText = "حدث خطأ أثناء الاتصال بالسحابة.";
+                    errorEl.innerText = "حدث خطأ أثناء حفظ البيانات في السحابة.";
                 }
             } else {
                 if (inputVal === storedPasscode) {
-                    closePasscodeModal();
-                    if (pendingAdminAction) pendingAdminAction();
+                    hideLockScreen();
                 } else {
                     errorEl.innerText = "الرقم السري غير صحيح! حاول مرة أخرى.";
                 }
             }
-        };
-
-        window.closePasscodeModal = function() {
-            document.getElementById('passcode-modal').classList.add('hidden');
-            document.getElementById('passcode-modal').classList.remove('flex');
-            pendingAdminAction = null;
         };
 
         function initPullToRefresh() {
@@ -682,12 +692,10 @@
         };
 
         window.openAdminControlPanel = function() {
-            requireAdminAuth(() => {
-                activeClass = null;
-                document.getElementById('main-dashboard').classList.add('hidden');
-                document.getElementById('class-view').classList.add('hidden');
-                document.getElementById('admin-control-view').classList.remove('hidden');
-            });
+            activeClass = null;
+            document.getElementById('main-dashboard').classList.add('hidden');
+            document.getElementById('class-view').classList.add('hidden');
+            document.getElementById('admin-control-view').classList.remove('hidden');
         };
 
         window.backToHome = function() {
@@ -872,7 +880,7 @@
                         <div class="grid grid-cols-3 gap-2.5 pt-1">
                             <button onclick="openActionModal('${student.id}')" class="bg-stone-800 hover:bg-stone-900 text-amber-100 py-3 rounded-2xl text-sm font-bold shadow-md cursor-pointer transition text-center">📝 رصد</button>
                             <button onclick="openModal('${student.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl text-sm font-bold shadow-md cursor-pointer transition text-center">📊 التقرير</button>
-                            <button onclick="removeStudentFromClass('${student.id}')" class="bg-rose-50 hover:bg-rose-600 text-white py-3 rounded-2xl text-sm font-bold shadow-md cursor-pointer transition text-center">🗑️ حذف</button>
+                            <button onclick="removeStudentFromClass('${student.id}')" class="bg-rose-500 hover:bg-rose-600 text-white py-3 rounded-2xl text-sm font-bold shadow-md cursor-pointer transition text-center">🗑️ حذف</button>
                         </div>
 
                     </div>
@@ -881,11 +889,9 @@
         }
 
         window.openSettingsModal = function(tabName = 'classes') {
-            requireAdminAuth(() => {
-                document.getElementById('settings-modal').classList.remove('hidden');
-                document.getElementById('settings-modal').classList.add('flex');
-                switchSettingsTab(tabName);
-            });
+            document.getElementById('settings-modal').classList.remove('hidden');
+            document.getElementById('settings-modal').classList.add('flex');
+            switchSettingsTab(tabName);
         };
 
         window.closeSettingsModal = function() {
@@ -959,7 +965,7 @@
                 
                 for(let stu of allStudents) {
                     if(stu.className === removedName) {
-                        stu.className = 'غير موزاد';
+                        stu.className = 'غير موزع';
                         await db.collection("allowed_students").doc(stu.id).update({ className: 'غير موزع' });
                     }
                 }
@@ -1613,7 +1619,7 @@
 <body class="text-slate-900 h-full flex flex-col justify-between text-sm overflow-x-hidden">
 
     <!-- 1. الترويسة العلوية الثابتة (Header) -->
-    <header id="main-header" class="p-4 shadow-sm border-b shrink-0 z-30 transition-all duration-500">
+    <header id="main-header" class="p-4 shadow-sm border-b shrink-0 z-30 transition-all duration-500 hidden">
         <div class="container mx-auto max-w-6xl flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="text-center sm:text-right">
                 <h1 class="text-lg font-black tracking-wide">نظام المتابعة السحابي الشامل</h1>
@@ -1627,7 +1633,7 @@
     </header>
 
     <!-- 2. منطقة المحتوى الوسطى القابلة للتمرير (Main Scroll Container) -->
-    <main id="main-scroll-container" class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 container mx-auto max-w-6xl w-full">
+    <main id="main-scroll-container" class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 container mx-auto max-w-6xl w-full hidden">
 
         <!-- 1. الواجهة الرئيسية: شبكة الفصول ولائحة التحكم كأيقونة بجانبها -->
         <div id="main-dashboard" class="py-2 space-y-6">
@@ -1725,7 +1731,7 @@
     </main>
 
     <!-- 3. التذييل السفلي الثابت (Footer) -->
-    <footer id="main-footer" class="py-3 px-6 border-t shrink-0 z-30 transition-all duration-500">
+    <footer id="main-footer" class="py-3 px-6 border-t shrink-0 z-30 transition-all duration-500 hidden">
         <div class="container mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-bold text-center sm:text-right">
             <div>د/ سامي محمد العمر 👨‍🏫</div>
             <div>الحقوق محفوظة 2026</div>
@@ -1733,31 +1739,32 @@
         </div>
     </footer>
 
-    <!-- نافذة طلب وإدخال الرقم السري (أمان لوحة التحكم) -->
-    <div id="passcode-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-3 z-50">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 relative shadow-2xl text-right">
-            <button onclick="closePasscodeModal()" class="absolute top-4 left-4 bg-slate-100 text-slate-700 w-8 h-8 rounded-full font-bold flex items-center justify-center cursor-pointer hover:bg-slate-200">✕</button>
-            
-            <div class="text-center mb-4">
-                <span class="text-4xl mb-2 inline-block">🔐</span>
-                <h3 id="passcode-modal-title" class="text-lg font-black text-slate-900">دخول لوحة التحكم</h3>
-                <p id="passcode-modal-desc" class="text-xs text-slate-500 font-bold mt-1 leading-relaxed">يرجى إدخال الرقم السري للتحقق:</p>
+    <!-- نافذة قفل الموقع الرئيسي وإدخال الرقم السري -->
+    <div id="passcode-modal" class="fixed inset-0 bg-slate-900/80 hidden items-center justify-center p-4 z-50 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 relative shadow-2xl text-right border-2 border-amber-200">
+            <div class="text-center mb-6">
+                <span class="text-5xl mb-3 inline-block">🔐</span>
+                <h3 id="passcode-modal-title" class="text-xl font-black text-slate-900">نظام متابعة الطلاب مقفل</h3>
+                <p id="passcode-modal-desc" class="text-xs text-slate-500 font-bold mt-2 leading-relaxed">يرجى إدخال الرقم السري الخاص بالدكتور سامي لدخول النظام:</p>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">الرقم السري:</label>
-                    <input type="password" id="passcode-input" placeholder="••••" class="w-full border p-3 rounded-xl text-center text-lg font-bold tracking-widest focus:outline-none">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">الرقم السري:</label>
+                    <input type="password" id="passcode-input" placeholder="••••" class="w-full border-2 border-slate-200 p-3.5 rounded-2xl text-center text-xl font-bold tracking-widest focus:border-amber-600 focus:outline-none bg-slate-50">
                 </div>
 
                 <div id="passcode-confirm-group" class="hidden">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">تأكيد الرقم السري:</label>
-                    <input type="password" id="passcode-confirm-input" placeholder="••••" class="w-full border p-3 rounded-xl text-center text-lg font-bold tracking-widest focus:outline-none">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">تأكيد الرقم السري:</label>
+                    <input type="password" id="passcode-confirm-input" placeholder="••••" class="w-full border-2 border-slate-200 p-3.5 rounded-2xl text-center text-xl font-bold tracking-widest focus:border-amber-600 focus:outline-none bg-slate-50">
                 </div>
 
-                <p id="passcode-error" class="text-xs font-bold text-rose-600 text-center min-h-[16px]"></p>
+                <p id="passcode-error" class="text-xs font-bold text-rose-600 text-center min-h-[18px]"></p>
 
-                <button id="passcode-submit-btn" onclick="submitPasscodeAuth()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold text-xs shadow-md transition cursor-pointer">تأكيد ودخول 🚀</button>
+                <button id="passcode-submit-btn" onclick="submitPasscodeAuth()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-3.5 rounded-2xl font-bold text-sm shadow-md transition cursor-pointer">فتح النظام والدخول 🚀</button>
+            </div>
+            <div class="mt-6 text-center border-t pt-3 text-[11px] font-bold text-slate-400">
+                منصة د/ سامي محمد العمر 👨‍🏫 | القرآن الكريم وعلومه
             </div>
         </div>
     </div>
