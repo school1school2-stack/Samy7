@@ -113,7 +113,7 @@
     </style>
 
     <script>
-        // إعدادات السحابة الخاصة بالدكتور سامي محمد العمر (مطابقة للكود الثاني)
+        // إعدادات سحابة الدكتور سامي محمد العمر الخاصة والمستقلة (معرفات مشروع د. سامي)
         const firebaseConfig = {
           apiKey: "AIzaSyAJKKo_NfmOMA095ulSRDnwQvfHLeIz_s",
           authDomain: "samy-28452.firebaseapp.com",
@@ -271,7 +271,7 @@
                         id: doc.id,
                         name: name,
                         email: email,
-                        className: data.className || 'غير موزاد',
+                        className: data.className || 'غير موزع',
                         phone: data.phone || '966566688614',
                         actions: data.actions || [],
                         attendanceStats: data.attendanceStats || { absents: 0, lates: 0, excuses: 0 }
@@ -458,7 +458,7 @@
 
             if(count > 0) {
                 await batch.commit();
-                alert(`تم رفع واعتماد ${count} طالب مباشرة بنجاح!`);
+                alert(`تم رفع واعتماد ${count} طالب مباشرة في سحابة د. سامي بنجاح!`);
                 document.getElementById("bulkInput").value = "";
             } else {
                 alert("تنسيق غير معروف. تأكد من وجود الاسم والإيميل في سطرين متتاليين.");
@@ -486,7 +486,7 @@
         }
 
         async function deleteAllStudents() {
-            if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين؟")) return;
+            if(!confirm("تحذير: هل أنت متأكد من مسح جميع الطلاب المعتمدين لدكتور سامي؟")) return;
             const snapshot = await db.collection("allowed_students").get();
             const batch = db.batch();
             snapshot.forEach(doc => batch.delete(doc.ref));
